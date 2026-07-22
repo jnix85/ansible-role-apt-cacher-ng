@@ -1,0 +1,4 @@
+# Copy to tests/inventory and point at a real Debian-family host
+# (Proxmox LXC/VM, Raspberry Pi, ...).
+[apt_cache_servers]
+cache01.lan ansible_user=root

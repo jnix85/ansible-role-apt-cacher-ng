@@ -1,0 +1,13 @@
+# Managed by Ansible (clawduino.apt_cacher_ng) — do not edit.
+# apt-cacher-ng merges every *.conf in this directory; last value wins,
+# so settings here override the distro acng.conf.
+
+Port: {{ apt_cacher_ng_port }}
+{% if apt_cacher_ng_bind_address | length > 0 %}
+BindAddress: {{ apt_cacher_ng_bind_address }}
+{% endif %}
+CacheDir: {{ apt_cacher_ng_cache_dir }}
+ExThreshold: {{ apt_cacher_ng_ex_threshold }}
+{% for key, value in apt_cacher_ng_extra_settings.items() %}
+{{ key }}: {{ value }}
+{% endfor %}

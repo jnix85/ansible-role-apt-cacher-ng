@@ -1,0 +1,16 @@
+---
+# Real-infrastructure smoke test — the only place ufw and real mDNS
+# discovery are exercised (containers can't do either).
+#
+#   ansible-playbook -i tests/inventory tests/playbook.yml
+#
+# Afterwards, on a client on the same LAN:
+#   apt install auto-apt-proxy && auto-apt-proxy
+# should print http://<cache-host>:3142
+- name: Apt-cacher-ng smoke test
+  hosts: apt_cache_servers
+  become: true
+  vars:
+    apt_cacher_ng_manage_firewall: true
+  roles:
+    - role: "{{ playbook_dir | dirname }}"

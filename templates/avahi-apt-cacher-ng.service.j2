@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<!-- Managed by Ansible (clawduino.apt_cacher_ng) - do not edit. -->
+<!-- Announces this cache for auto-apt-proxy client discovery. -->
+<service-group>
+  <name replace-wildcards="yes">apt-cacher-ng on %h</name>
+  <service>
+    <type>_apt_proxy._tcp</type>
+    <port>{{ apt_cacher_ng_port }}</port>
+  </service>
+</service-group>

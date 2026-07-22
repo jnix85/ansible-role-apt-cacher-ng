@@ -1,0 +1,11 @@
+.venv/
+.ansible/
+__pycache__/
+*.pyc
+*.retry
+tests/inventory
+.cache/
+.pytest_cache/
+.molecule/
+.DS_Store
+*.swp

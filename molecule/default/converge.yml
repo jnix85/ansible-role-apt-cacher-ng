@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    # ufw can't be exercised in containers; it is covered by
+    # tests/playbook.yml on real infrastructure.
+    - role: ansible-role-apt-cacher-ng

@@ -1,0 +1,14 @@
+[project]
+name = "ansible-role-apt-cacher-ng"
+version = "0.1.0"
+description = "Dev environment for the clawduino.apt_cacher_ng Ansible role"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ansible-core>=2.15",
+    "molecule>=24.2",
+    "molecule-plugins[docker]>=23.5",
+    "ansible-lint>=24.0",
+]
