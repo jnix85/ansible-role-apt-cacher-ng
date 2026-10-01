@@ -1,0 +1,17 @@
+---
+- name: Allow cache port from anywhere
+  community.general.ufw:
+    rule: allow
+    to_port: "{{ apt_cacher_ng_port }}"
+    proto: tcp
+    comment: apt-cacher-ng
+  when: apt_cacher_ng_allowed_networks | length == 0
+
+- name: Allow cache port from allowed networks
+  community.general.ufw:
+    rule: allow
+    to_port: "{{ apt_cacher_ng_port }}"
+    proto: tcp
+    from_ip: "{{ item }}"
+    comment: apt-cacher-ng
+  loop: "{{ apt_cacher_ng_allowed_networks }}"

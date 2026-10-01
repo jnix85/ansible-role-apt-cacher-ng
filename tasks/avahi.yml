@@ -1,0 +1,21 @@
+---
+- name: Install avahi-daemon
+  ansible.builtin.apt:
+    name: avahi-daemon
+    state: present
+
+- name: Ensure avahi-daemon is enabled and started
+  ansible.builtin.service:
+    name: avahi-daemon
+    state: started
+    enabled: true
+
+# avahi-daemon watches its services directory and reloads automatically,
+# so no handler is needed for this file.
+- name: Publish _apt_proxy._tcp service record
+  ansible.builtin.template:
+    src: avahi-apt-cacher-ng.service.j2
+    dest: /etc/avahi/services/apt-cacher-ng.service
+    owner: root
+    group: root
+    mode: "0644"

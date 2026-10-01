@@ -1,0 +1,11 @@
+---
+profile: production
+
+exclude_paths:
+  - .venv/
+  - .git/
+
+# converge.yml references the role by directory name, resolvable only at
+# molecule runtime; mock it so lint's syntax-check passes.
+mock_roles:
+  - ansible-role-apt-cacher-ng

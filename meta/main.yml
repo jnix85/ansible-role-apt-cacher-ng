@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  role_name: apt_cacher_ng
+  namespace: clawduino
+  author: Jason Parks
+  description: >-
+    Install and configure an apt-cacher-ng server, discoverable by
+    auto-apt-proxy clients via mDNS.
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+    - name: Ubuntu
+      versions:
+        - noble
+        - resolute
+  galaxy_tags:
+    - apt
+    - cache
+    - proxy
+    - debian
+    - ubuntu
+
+dependencies: []

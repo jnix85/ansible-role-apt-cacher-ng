@@ -1,0 +1,45 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert apt-cacher-ng is running and enabled
+      ansible.builtin.assert:
+        that:
+          - services['apt-cacher-ng.service'].state == 'running'
+          - services['apt-cacher-ng.service'].status == 'enabled'
+
+    - name: Fetch the acng report page
+      ansible.builtin.uri:
+        url: http://127.0.0.1:3142/acng-report.html
+        status_code: 200
+
+    - name: Stat configuration drop-in
+      ansible.builtin.stat:
+        path: /etc/apt-cacher-ng/zz-ansible.conf
+      register: acng_dropin
+
+    - name: Stat cache directory
+      ansible.builtin.stat:
+        path: /var/cache/acng
+      register: acng_cache_dir
+
+    - name: Assert config artifacts are in place
+      ansible.builtin.assert:
+        that:
+          - acng_dropin.stat.exists
+          - acng_cache_dir.stat.isdir
+          - acng_cache_dir.stat.pw_name == 'apt-cacher-ng'
+
+    - name: Read avahi service record
+      ansible.builtin.slurp:
+        src: /etc/avahi/services/apt-cacher-ng.service
+      register: acng_avahi_record
+
+    - name: Assert mDNS record announces _apt_proxy._tcp
+      ansible.builtin.assert:
+        that:
+          - "'_apt_proxy._tcp' in (acng_avahi_record.content | b64decode)"

@@ -1,0 +1,54 @@
+---
+- name: Assert the target is a Debian-family system
+  ansible.builtin.assert:
+    that:
+      - ansible_os_family == "Debian"
+    fail_msg: >-
+      clawduino.apt_cacher_ng supports Debian-family systems only
+      (Debian, Ubuntu, Armbian, Raspberry Pi OS);
+      got {{ ansible_distribution }}.
+
+- name: Install apt-cacher-ng
+  ansible.builtin.apt:
+    name: apt-cacher-ng
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create cache directory
+  ansible.builtin.file:
+    path: "{{ apt_cacher_ng_cache_dir }}"
+    state: directory
+    owner: apt-cacher-ng
+    group: apt-cacher-ng
+    mode: "0755"
+  notify: Restart apt-cacher-ng
+
+- name: Template configuration drop-in
+  ansible.builtin.template:
+    src: zz-ansible.conf.j2
+    dest: /etc/apt-cacher-ng/zz-ansible.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart apt-cacher-ng
+
+- name: Ensure apt-cacher-ng is enabled and started
+  ansible.builtin.service:
+    name: apt-cacher-ng
+    state: started
+    enabled: true
+
+- name: Announce the cache over mDNS
+  ansible.builtin.include_tasks: avahi.yml
+  when: apt_cacher_ng_avahi_announce
+
+- name: Remove mDNS announcement
+  ansible.builtin.file:
+    path: /etc/avahi/services/apt-cacher-ng.service
+    state: absent
+  when: not apt_cacher_ng_avahi_announce
+
+- name: Manage firewall
+  ansible.builtin.include_tasks: firewall.yml
+  when: apt_cacher_ng_manage_firewall

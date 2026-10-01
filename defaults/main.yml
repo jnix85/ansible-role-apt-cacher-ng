@@ -1,0 +1,24 @@
+---
+# Network. Empty bind address = bind all interfaces (upstream default).
+apt_cacher_ng_port: 3142
+apt_cacher_ng_bind_address: ""
+
+# Cache housekeeping. The role creates this directory with
+# apt-cacher-ng:apt-cacher-ng ownership. ExThreshold is how many days a
+# package stays cached after it disappears from the repo indexes.
+apt_cacher_ng_cache_dir: /var/cache/acng
+apt_cacher_ng_ex_threshold: 4
+
+# Free-form acng.conf settings, rendered last in the drop-in so they win
+# over the first-class variables above if duplicated.
+# Example: {PassThroughPattern: ".*"}
+apt_cacher_ng_extra_settings: {}
+
+# Publish an _apt_proxy._tcp mDNS record so clients running auto-apt-proxy
+# discover this cache automatically. Installs avahi-daemon.
+apt_cacher_ng_avahi_announce: true
+
+# Opt-in ufw allow rule for the cache port. Empty allowed_networks list
+# allows from anywhere; otherwise one rule per CIDR.
+apt_cacher_ng_manage_firewall: false
+apt_cacher_ng_allowed_networks: []
